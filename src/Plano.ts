@@ -1,9 +1,10 @@
+import { Linea } from "./Linea";
 import { PuntoCentral } from "./PuntoCentral";
 import { Vector } from "./Vector";
 
 export class Plano {
   private canvas;
-  private ctx;
+  ctx;
   ancho: number;
   alto: number;
   origenX: number;
@@ -25,29 +26,38 @@ export class Plano {
     this.origenY = this.alto / 2;
     this.puntoCentral = new PuntoCentral(this);
 
+    const linea1 = new Linea({ x: 0, y: 0 }, { x: 1, y: 1 });
+    const linea2 = new Linea({ x: 0, y: 0 }, { x: 1, y: 3 });
+    linea1.dibujar(this);
+    linea2.dibujar(this);
+
     canvas.addEventListener("mousemove", (e) => {
+      this.limpiarPlano();
       const position = canvas.getBoundingClientRect();
       const x = (e.clientX - position.left) / 20 - this.origenX / 20;
       const y = ((e.clientY - position.top) / 20 - this.origenY / 20) * -1;
-      this.puntoCentral.cambiarCoordenadas(x, y);
-      this.dibujarPlano();
+      linea1.mover(x, y);
+      linea1.dibujar(this);
+      linea2.mover(x, y);
+      linea2.dibujar(this);
+      //this.puntoCentral.cambiarCoordenadas(x, y);
+      //this.dibujarPlano();
     });
   }
 
   dibujarPlano() {
     this.limpiarPlano();
 
+    // actualiza lineas del punto
     this.puntoCentral.actualizarLineas();
+
     this.dibujarParedes();
+
     this.dibujarPunto(this.puntoCentral.x, this.puntoCentral.y);
+
     this.puntoCentral.lineas.forEach((linea) => {
-      linea.cambiarCoordenadas(
-        linea.x0,
-        this.puntoCentral.y,
-        linea.x1,
-        this.puntoCentral.y
-      );
-      this.dibujarLinea(linea.x0, linea.y0, linea.x1, linea.y1, linea.color);
+      linea.cambiarCoordenadas(linea.x1, linea.y1, linea.x2, linea.y2);
+      this.dibujarLinea(linea.x1, linea.y1, linea.x2, linea.y2, linea.color);
     });
 
     //this.dibujarEjes();
@@ -133,7 +143,7 @@ export class Plano {
 
   dibujarParedes() {
     this.paredes.forEach((pared) => {
-      this.dibujarLinea(pared.x0, pared.y0, pared.x1, pared.y1, pared.color);
+      this.dibujarLinea(pared.x1, pared.y1, pared.x2, pared.y2, pared.color);
     });
   }
 
