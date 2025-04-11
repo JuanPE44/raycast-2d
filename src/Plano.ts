@@ -62,6 +62,7 @@ export class Plano {
 
     //this.dibujarEjes();
     //this.dibujarMarcas();
+    // pepe
   }
 
   dibujarEjes() {
