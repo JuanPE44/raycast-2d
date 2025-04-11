@@ -1,4 +1,5 @@
 import { Plano } from "./Plano";
+import { Vector } from "./Vector";
 
 export class Linea {
   punto: { x: number; y: number };
@@ -40,5 +41,23 @@ export class Linea {
     plano.ctx!.moveTo(canvasX1, canvasY1);
     plano.ctx!.lineTo(canvasX2, canvasY2);
     plano.ctx!.stroke();
+  }
+
+  obtenerInterseccion(vector: Vector) {
+    const det =
+      (this.x1 - this.x2) * (vector.y1 - vector.y2) -
+      (this.y1 - this.y2) * (vector.x1 - vector.x2);
+
+    if (det === 0) return null; // rectas paralelas o coincidentes
+
+    const det1 = this.x1 * this.y2 - this.y1 * this.x2;
+    const det2 = vector.x1 * vector.y2 - vector.y1 * vector.x2;
+
+    const x =
+      (det1 * (vector.x1 - vector.x2) - (this.x1 - this.x2) * det2) / det;
+    const y =
+      (det1 * (vector.y1 - vector.y2) - (this.y1 - this.y2) * det2) / det;
+
+    return { x, y };
   }
 }

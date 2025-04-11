@@ -12,8 +12,8 @@ export class Plano {
   escala = 20;
   private colorLinea = "#fff";
   paredes = [
-    new Vector(-10, 11, 20, 20, this),
-    new Vector(10, -11, 0, 0, this),
+    new Vector(-10, 11, 20, 20, this, "#f0f"),
+    new Vector(10, -11, 0, 0, this, "#ff0"),
   ];
   private puntoCentral: PuntoCentral;
 
@@ -33,6 +33,7 @@ export class Plano {
 
     canvas.addEventListener("mousemove", (e) => {
       this.limpiarPlano();
+      this.dibujarParedes();
       const position = canvas.getBoundingClientRect();
       const x = (e.clientX - position.left) / 20 - this.origenX / 20;
       const y = ((e.clientY - position.top) / 20 - this.origenY / 20) * -1;
@@ -40,6 +41,7 @@ export class Plano {
       linea1.dibujar(this);
       linea2.mover(x, y);
       linea2.dibujar(this);
+
       //this.puntoCentral.cambiarCoordenadas(x, y);
       //this.dibujarPlano();
     });
@@ -62,7 +64,6 @@ export class Plano {
 
     //this.dibujarEjes();
     //this.dibujarMarcas();
-    // pepe
   }
 
   dibujarEjes() {
