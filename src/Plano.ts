@@ -1,5 +1,4 @@
-import { Linea } from "./Linea";
-import { PuntoCentral } from "./PuntoCentral";
+import { PuntoOrigen } from "./PuntoOrigen";
 import { Vector } from "./Vector";
 
 export class Plano {
@@ -10,12 +9,12 @@ export class Plano {
   origenX: number;
   origenY: number;
   escala = 20;
-  private colorLinea = "#fff";
+  colorLinea = "#fff";
   paredes = [
     new Vector(-10, 11, 20, 20, this, "#f0f"),
     new Vector(10, -11, 0, 0, this, "#ff0"),
   ];
-  private puntoCentral: PuntoCentral;
+  PuntoOrigen: PuntoOrigen;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -24,12 +23,7 @@ export class Plano {
     this.alto = canvas.height;
     this.origenX = this.ancho / 2;
     this.origenY = this.alto / 2;
-    this.puntoCentral = new PuntoCentral(this);
-
-    const linea1 = new Linea({ x: 0, y: 0 }, { x: 1, y: 1 });
-    const linea2 = new Linea({ x: 0, y: 0 }, { x: 1, y: 3 });
-    linea1.dibujar(this);
-    linea2.dibujar(this);
+    this.PuntoOrigen = new PuntoOrigen(this);
 
     canvas.addEventListener("mousemove", (e) => {
       this.limpiarPlano();
@@ -37,31 +31,21 @@ export class Plano {
       const position = canvas.getBoundingClientRect();
       const x = (e.clientX - position.left) / 20 - this.origenX / 20;
       const y = ((e.clientY - position.top) / 20 - this.origenY / 20) * -1;
-      linea1.mover(x, y);
-      linea1.dibujar(this);
-      linea2.mover(x, y);
-      linea2.dibujar(this);
 
-      //this.puntoCentral.cambiarCoordenadas(x, y);
+      this.PuntoOrigen.cambiarCoordenadas(x, y);
+      this.PuntoOrigen.comprobarColisionLineas();
+      this.PuntoOrigen.dibujarLineas();
+      // dibujar punto central
+      this.dibujarPunto(x, y);
+
       //this.dibujarPlano();
     });
   }
 
   dibujarPlano() {
-    this.limpiarPlano();
-
+    //this.limpiarPlano();
     // actualiza lineas del punto
-    this.puntoCentral.actualizarLineas();
-
-    this.dibujarParedes();
-
-    this.dibujarPunto(this.puntoCentral.x, this.puntoCentral.y);
-
-    this.puntoCentral.lineas.forEach((linea) => {
-      linea.cambiarCoordenadas(linea.x1, linea.y1, linea.x2, linea.y2);
-      this.dibujarLinea(linea.x1, linea.y1, linea.x2, linea.y2, linea.color);
-    });
-
+    //this.dibujarParedes();
     //this.dibujarEjes();
     //this.dibujarMarcas();
   }

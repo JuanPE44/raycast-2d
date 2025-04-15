@@ -87,7 +87,7 @@ export class Vector {
   ) {
     return (Qx - Px) * (Ry - Py) - (Qy - Py) * (Rx - Px);
   }
-
+*/
 
   obtenerInterseccion(vector: Vector) {
     const det =
@@ -105,5 +105,5 @@ export class Vector {
       (det1 * (vector.y1 - vector.y2) - (this.y1 - this.y2) * det2) / det;
 
     return { x, y };
-  }*/
+  }
 }
